@@ -44,7 +44,6 @@ public class Picross {
         System.out.println();
     }
  
-    // collect all possible solutions for the given clues
     static List<List<BitSet>> getCandidates(String[] data, int len) {
         List<List<BitSet>> result = new ArrayList<>();
  
@@ -68,7 +67,7 @@ public class Picross {
         return result;
     }
  
-    // permutation generator, translated from Python via D
+    // permutation generator
     static List<String> genSequence(List<String> ones, int numZeros) {
         if (ones.isEmpty())
             return asList(repeat(numZeros, "0"));
@@ -88,12 +87,6 @@ public class Picross {
             sb.append(s);
         return sb.toString();
     }
- 
-    /* If all the candidates for a row have a value in common for a certain cell,
-    then it's the only possible outcome, and all the candidates from the
-    corresponding column need to have that value for that cell too. The ones
-    that don't, are removed. The same for all columns. It goes back and forth,
-    until no more candidates can be removed or a list is empty (failure). */
  
     static int reduceMutual(List<List<BitSet>> cols, List<List<BitSet>> rows) {
         int countRemoved1 = reduce(cols, rows);
@@ -116,13 +109,11 @@ public class Picross {
             commonOn.set(0, b.size());
             BitSet commonOff = new BitSet();
  
-            // determine which values all candidates of ai have in common
             for (BitSet candidate : a.get(i)) {
                 commonOn.and(candidate);
                 commonOff.or(candidate);
             }
  
-            // remove from bj all candidates that don't share the forced values
             for (int j = 0; j < b.size(); j++) {
                 final int fi = i, fj = j;
  
